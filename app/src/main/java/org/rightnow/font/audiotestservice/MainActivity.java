@@ -7,10 +7,15 @@ import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.google.android.gms.cast.framework.CastButtonFactory;
 
 public class MainActivity extends AppCompatActivity {
     Activity activity;
@@ -20,10 +25,18 @@ public class MainActivity extends AppCompatActivity {
 
     private AudioBroadcastReceiver audioReceiver;
 
+    private MenuItem mediaRouteMenuItem;
+    private Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
+
         activity = this;
 
         Button gainPermanentButton = (Button)findViewById(R.id.gainPermanent);
@@ -84,6 +97,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         LocalBroadcastManager.getInstance(this).registerReceiver(audioReceiver, new IntentFilter("org.rightnow.font.audiotestservice.BROADCAST_ACTION"));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
+        mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), menu, R.id.media_route_menu_item);
+        return true;
     }
 
     @Override
